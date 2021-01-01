@@ -24,7 +24,10 @@ Route::get('posts/categories/{id}', 'Api\CategoryController@posts');
 
 Route::get('posts', 'Api\PostController@index');
 Route::get('post/{id}', 'Api\PostController@show');
-Route::get('comments/post/{id}', 'Api\PostController@comments');
+Route::get('comments/post /{id}', 'Api\PostController@comments');
+
+Route::post('register', 'Api\UserController@store');
+Route::post('token', 'Api\UserController@getToken');
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

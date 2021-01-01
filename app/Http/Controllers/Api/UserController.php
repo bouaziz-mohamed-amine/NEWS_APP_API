@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AuthorCommentsResource;
 use App\Http\Resources\AuthorPostsResource;
+use App\Http\Resources\TokenResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UsersResource;
 use App\Post;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -32,7 +34,17 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'  => 'required',
+            'email' => 'required',
+            'password'  => 'required'
+        ]);
+        $user = new User();
+        $user->name = $request->get( 'name' );
+        $user->email = $request->get( 'email' );
+        $user->password = Hash::make( $request->get( 'password' ) );
+        $user->save();
+        return new UserResource( $user );
     }
 
     /**
@@ -87,4 +99,17 @@ class UserController extends Controller
         $comments = $user->comments;
         return new AuthorCommentsResource( $comments );
     }
+    public function getToken(Request $request){
+        $request->validate( [
+            'email' => 'required',
+            'password'  => 'required'
+        ] );
+        $credentials = $request->only( 'email' , 'password' );
+        if( Auth::attempt( $credentials ) ){
+            $user = User::where( 'email' , $request->get( 'email' ) )->first();
+            return new TokenResource( [ 'token' => $user->api_token] );
+        }
+        return 'not found';
+    }
 }
+
