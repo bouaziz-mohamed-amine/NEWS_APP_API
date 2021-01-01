@@ -13,7 +13,7 @@ $factory->define(\App\Post::class, function (Faker $faker) {
         'featured_image'    => $faker->imageUrl(),
         'votes_up'  => $faker->numberBetween( 1 , 100 ),
         'votes_down'    => $faker->numberBetween( 1 , 100 ),
-        'user_id'   => $faker->numberBetween( 1 , 50 ),
+        'user_id'   => $faker->numberBetween( 1 , 15 ),
         'category_id'   => $faker->numberBetween( 1 , 15 ),
     ];
 });
