@@ -12,6 +12,7 @@ use App\Post;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -27,10 +28,8 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return UserResource
      */
     public function store(Request $request)
     {
@@ -58,15 +57,21 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param $id
+     * @return mixed
      */
     public function update(Request $request, $id)
-    {
-        //
+    {   $user=User::find($id);
+        if($request->has('name')){
+            $user->name=$request->get('name');
+        }
+        if($request->has('avatar')){
+            $user->avatar=$request->get('avatar');
+        }
+        $user->save();
+
+        return new UserResource($user);
     }
 
     /**

@@ -29,6 +29,14 @@ Route::get('comments/post /{id}', 'Api\PostController@comments');
 Route::post('register', 'Api\UserController@store');
 Route::post('token', 'Api\UserController@getToken');
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware(['auth:api'])->group(function () {
+    Route::post('update-user/{id}','Api\UserController@update');
+    Route::post( 'posts' , 'Api\PostController@store' );
+    Route::post( 'posts/{id}' , 'Api\PostController@update'  );
+    Route::delete( 'posts/{id}' , 'Api\PostController@destroy'  );
+
+    Route::post( 'comments/posts/{id}' , 'Api\CommentController@store' );
+
+    Route::post( 'votes/posts/{id}' , 'Api\PostController@votes' );
+
 });
