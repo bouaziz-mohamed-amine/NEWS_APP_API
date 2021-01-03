@@ -53,7 +53,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user=User::find($id);
+        $user=User::with(['posts','comments'])->where('id',$id)->get();
         return new UserResource($user);
     }
 
