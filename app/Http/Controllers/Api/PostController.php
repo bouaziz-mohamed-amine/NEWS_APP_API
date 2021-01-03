@@ -10,6 +10,7 @@ use App\Http\Resources\UserResource;
 use App\Post;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -49,7 +50,7 @@ class PostController extends Controller
 
         $post->date_written = Carbon::now()->format('y-m-d H:i:s' );
 
-/*
+
         // TODO: Handle 404 error
         if( $request->hasFile('featured_image') ){
             $featuredImage = $request->file( 'featured_image' );
@@ -61,7 +62,7 @@ class PostController extends Controller
             );
             $post->featured_image = url('/') . '/images/' .$filename;
         }
-*/
+
         $post->save();
         return new  PostResource($post);
 
@@ -79,15 +80,40 @@ class PostController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param $id
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = $request->user();
+        $post = Post::find( $id );
+
+        if( $request->has('title') ){
+            $post->title = $request->get( 'title' );
+        }
+
+        if( $request->has( 'content' ) ){
+            $post->content = $request->get( 'content' );
+        }
+
+        if( $request->has('category_id') ){
+            if( intval( $request->get( 'category_id' ) ) != 0 ){
+                $post->category_id = intval( $request->get( 'category_id' ) );
+            }
+        }
+        // TODO: Handle 404 error
+        if( $request->hasFile('featured_image') ){
+            $featuredImage = $request->file( 'featured_image' );
+            $filename = time().$featuredImage->getClientOriginalName();
+            Storage::disk('images')->putFileAs(
+                $filename,
+                $featuredImage,
+                $filename
+            );
+            $post->featured_image = url('/') . '/images/' .$filename;
+        }
+
+        $post->save();
     }
 
     /**
