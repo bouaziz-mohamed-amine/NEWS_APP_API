@@ -69,13 +69,10 @@ class UserController extends Controller
         }
         if( $request->hasFile('avatar') ){
             $featuredImage = $request->file( 'avatar' );
-            $filename = time().$featuredImage->getClientOriginalName();
-            Storage::disk('images')->putFileAs(
-                $filename,
-                $featuredImage,
-                $filename
-            );
-            $user->avatar = url('/') . '/images/' .$filename;
+            $filename = $featuredImage->getClientOriginalName();
+            $request->avatar->storeAs('public/images', $filename);
+            $user->avatar = asset('storage/images/' .$filename);
+
         }
         $user->save();
 

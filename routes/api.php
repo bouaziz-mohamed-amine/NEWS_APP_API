@@ -42,3 +42,4 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post( 'votes/posts/{id}' , 'Api\PostController@votes' );
 
 });
+

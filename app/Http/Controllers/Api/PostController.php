@@ -52,7 +52,7 @@ class PostController extends Controller
 
 
         // TODO: Handle 404 error
-        if( $request->hasFile('featured_image') ){
+        if( $request->hasFile('featured_image')){
             $featuredImage = $request->file( 'featured_image' );
             $filename = time().$featuredImage->getClientOriginalName();
             Storage::disk('images')->putFileAs(
